@@ -9,7 +9,8 @@ class ElasticQuery
     protected $index     = "";
     protected $alternate = false;
 
-    public function __construct($alternate = false)
+
+    public function __construct($prefix = null, $alternate = false)
     {
         $hosts = [
             [
@@ -21,12 +22,14 @@ class ElasticQuery
 
             ],
         ];
+        $this->prefix    = is_null($prefix) ? config('elastic.prefix') : $prefix;
         $this->alternate = $alternate;
         \Log::debug(json_encode($hosts, true));
         $this->elastic_client = ClientBuilder::create()
             ->setHosts($hosts)
             ->build();
     }
+
 
     public function reset()
     {
@@ -45,8 +48,8 @@ class ElasticQuery
         if ($this->alternate) {
             $this->index = $index;
         } else {
-            $this->index           = config('elastic.prefix') . $index;
-            $this->params["index"] = config('elastic.prefix') . $index;
+            $this->index           = $this->prefix . $index;
+            $this->params["index"] = $this->prefix . $index;
         }
 
         return $this;
