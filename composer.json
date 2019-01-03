@@ -4,7 +4,7 @@
     "require": {
         "elasticsearch/elasticsearch": "^6.0",
         "darkaonline/ripcord": "^0.1.6",
-        "laravel/laravel": "^5.7"
+        "laravel/framework": "5.7.*"
     },
     "authors": [
         {
