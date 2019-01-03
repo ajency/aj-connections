@@ -9,19 +9,20 @@ class ElasticQuery
     protected $index     = "";
     protected $alternate = false;
 
-
-    public function __construct($prefix = null, $alternate = false)
+    public function __construct($prefix = null, array $hosts = null, $alternate = false)
     {
-        $hosts = [
-            [
-                "host"   => config('elastic.host'),
-                "port"   => config('elastic.port'),
-                "scheme" => config('elastic.scheme'),
-                "user"   => config('elastic.user'),
-                "pass"   => config('elastic.pass'),
+        if (is_null($hosts)) {
+            $hosts = [
+                [
+                    "host"   => config('elastic.host'),
+                    "port"   => config('elastic.port'),
+                    "scheme" => config('elastic.scheme'),
+                    "user"   => config('elastic.user'),
+                    "pass"   => config('elastic.pass'),
+                ],
+            ];
+        }
 
-            ],
-        ];
         $this->prefix    = is_null($prefix) ? config('elastic.prefix') : $prefix;
         $this->alternate = $alternate;
         \Log::debug(json_encode($hosts, true));
@@ -29,7 +30,6 @@ class ElasticQuery
             ->setHosts($hosts)
             ->build();
     }
-
 
     public function reset()
     {
