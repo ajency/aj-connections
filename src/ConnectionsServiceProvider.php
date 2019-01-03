@@ -1,10 +1,10 @@
 <?php
 
-namespace Ajency\Elastic;
+namespace Ajency\Connections;
 
 use Illuminate\Support\ServiceProvider;
 
-class ElasticServiceProvider extends ServiceProvider
+class ConnectionsServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap services.

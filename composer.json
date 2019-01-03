@@ -1,5 +1,5 @@
 {
-    "name": "ajency/elastic",
+    "name": "ajency/connections",
     "description": "Elasticsearch and Odoo wrapper",
     "require": {
         "elasticsearch/elasticsearch": "^6.0",
