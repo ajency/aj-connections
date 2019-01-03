@@ -1,0 +1,15 @@
+{
+    "name": "ajency/elastic",
+    "description": "Elasticsearch and Odoo wrapper",
+    "require": {
+        "elasticsearch/elasticsearch": "^6.0",
+        "darkaonline/ripcord": "^0.1.6",
+        "laravel/laravel": "^5.7"
+    },
+    "authors": [
+        {
+            "name": "Prasad Honavar",
+            "email": "prasad@ajency.in"
+        }
+    ]
+}
