@@ -1,5 +1,5 @@
 <?php
-namespace Ajency\Elastic;
+namespace Ajency\Connections;
 
 use Elasticsearch\ClientBuilder;
 
