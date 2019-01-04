@@ -62,10 +62,7 @@ class OdooConnect
 
     public function multiExec($model, $method, $params, $attributes = [])
     {
-        if (!isset($attributes['limit']) && ($method == 'search' || $method == 'search_read')) {
-            $attributes['limit'] = config('odoo.limit');
-        }
-
+        
         \Log::info($params);
         \Log::info($attributes);
         $data = collect();
