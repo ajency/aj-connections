@@ -266,10 +266,21 @@ class ElasticQuery
         return $this->elastic_client->search($this->params);
     }
 
-    public function get($id)
+    /**
+     * Elastic GET call
+     * Used to fetch document by ID
+     * @param string $id Search params
+     * @param $source can be a array of field names or a field name
+     * Controls which field(s) will be fetched
+     * empty array returns all fields  
+     * @return array Elasticsearch Response
+     */
+    public function get($id, $source = [])
     {
-        $this->params["type"] = "_doc";
-        $this->params["id"]   = $id;
+        $this->params["type"]    = "_doc";
+        $this->params["id"]      = $id;
+        $this->params["_source"] = $source;
+
         return $this->elastic_client->get($this->params);
     }
 
