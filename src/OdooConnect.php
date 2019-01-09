@@ -90,7 +90,7 @@ class OdooConnect
         } elseif (isset($filters['write'])) {
             return [[['write_date', '>', $filters['write']]]];
         } elseif (isset($filters['id_range'])){
-            return [[['id', '>', $filters['id_range'][0]],['id', '<', $filters['id_range'][1]]]];
+            return [[['id', '>=', $filters['id_range'][0]],['id', '<=', $filters['id_range'][1]]]];
         }
     }
 
