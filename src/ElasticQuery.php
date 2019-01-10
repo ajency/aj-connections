@@ -453,6 +453,11 @@ class ElasticQuery
         return $this->elastic_client->reindex($this->params);
     }
 
+    public static function createAggCardinality(string $name, string $field)
+    {
+        return [$name => ["cardinality" => ["field" => $field]]];
+    }
+
     public static function createAggMax(string $name, string $field)
     {
         return [$name => ["max" => ["field" => $field]]];
