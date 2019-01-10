@@ -453,6 +453,11 @@ class ElasticQuery
         return $this->elastic_client->reindex($this->params);
     }
 
+    public static function createAggCardinality(string $name, string $field)
+    {
+        return [$name => ["cardinality" => ["field" => $field]]];
+    }
+
     public static function createAggMax(string $name, string $field)
     {
         return [$name => ["max" => ["field" => $field]]];
@@ -466,6 +471,11 @@ class ElasticQuery
     public static function createAggSum(string $name, string $field)
     {
         return [$name => ["sum" => ["field" => $field]]];
+    }
+
+    public static function createAggAvg(string $name, string $field)
+    {
+        return [$name => ["avg" => ["field" => $field]]];
     }
 
     public static function createAggTerms(string $name, string $field, array $params = [])
