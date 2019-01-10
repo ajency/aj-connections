@@ -473,6 +473,11 @@ class ElasticQuery
         return [$name => ["sum" => ["field" => $field]]];
     }
 
+    public static function createAggAvg(string $name, string $field)
+    {
+        return [$name => ["avg" => ["field" => $field]]];
+    }
+
     public static function createAggTerms(string $name, string $field, array $params = [])
     {
         return [
