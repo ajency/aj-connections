@@ -81,17 +81,28 @@ class OdooConnect
 
     public static function odooFilter($filters)
     {
+        $odooFilter = [];
         if (isset($filters['id'])) {
-            return [[['id', '>', $filters['id']]]];
-        } elseif (isset($filters['created'])) {
-            return [[['create_date', '>', $filters['created']]]];
-        } elseif (isset($filters['updated'])) {
-            return [[['__last_update', '>', $filters['updated']]]];
-        } elseif (isset($filters['write'])) {
-            return [[['write_date', '>', $filters['write']]]];
+            $odooFilter[] = ['id', '>', $filters['id']];
         } elseif (isset($filters['id_range'])){
-            return [[['id', '>=', $filters['id_range'][0]],['id', '<=', $filters['id_range'][1]]]];
+            $odooFilter[] = ['id', '>=', $filters['id_range'][0]];
+            $odooFilter[] = ['id', '<=', $filters['id_range'][1]];
         }
+
+        if (isset($filters['created'])) {
+            $odooFilter[] = ['create_date', '>', $filters['created']];
+        } 
+        if (isset($filters['updated'])) {
+            $odooFilter[] = ['__last_update', '>', $filters['updated']];
+        } 
+        if (isset($filters['write'])) {
+            $odooFilter[] = ['write_date', '>', $filters['write']];
+        } 
+        if (isset($filters['term'])) {
+            $odooFilter[] = [$filters['term'][0], '=', $filters['term'][1]];
+        } 
+
+        return [$odooFilter];
     }
 
     public static function getAllActiveIds($model){
