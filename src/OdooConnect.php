@@ -99,7 +99,9 @@ class OdooConnect
             $odooFilter[] = ['write_date', '>', $filters['write']];
         } 
         if (isset($filters['term'])) {
-            $odooFilter[] = [$filters['term'][0], '=', $filters['term'][1]];
+            foreach ($filters['term'] as $term) {
+                $odooFilter[] = [$term[0], '=', $term[1]];
+            }
         } 
 
         return [$odooFilter];
