@@ -13,13 +13,30 @@ class OdooConnect
     protected $common;
     protected $model;
 
-    public function __construct()
+    public function __construct($config = null)
     {
-        $this->connections = config('odoo.connections');
-        $this->URL         = config('odoo.url');
-        $this->DB          = config('odoo.db');
-        $this->limit       = intval(config('odoo.limit'));
+        if (is_null($config)) {
+            $this->connections = config('odoo.connections');
+            $this->URL         = config('odoo.url');
+            $this->DB          = config('odoo.db');
+            $this->limit       = intval(config('odoo.limit'));
+        } else {
+            if (!(
+                isset($config['connections']) &&
+                isset($config['url']) &&
+                isset($config['db']) &&
+                isset($config['connections'][0]) &&
+                isset($config['connections'][0]['username']) &&
+                isset($config['connections'][0]['password'])
+            )) {
+                throw new \Exception("Error Processing Odoo Credentials", 1);
+            }
+            $this->connections = $config['connections'];
+            $this->URL         = $config['url'];
+            $this->DB          = $config['db'];
+            $this->limit       = (isset($config['limit']))? $config['limit']:intval(config('odoo.limit'));
 
+        }
         $this->common = Ripcord::client("{$this->URL}/xmlrpc/2/common");
         $this->models = Ripcord::client("{$this->URL}/xmlrpc/2/object");
 
@@ -55,19 +72,22 @@ class OdooConnect
 
         \Log::info('odoo data from ' . $model . ' with user ' . $this->defaultConn()['username'] . ': ' . $data);
         /*if (isset($data['faultCode'])) {
-            abort(400);
+        abort(400);
         }*/
         return $data;
     }
 
     public function multiExec($model, $method, $params, $attributes = [])
     {
-        
+
         \Log::info($params);
         \Log::info($attributes);
         $data = collect();
         foreach ($this->connections as $connection) {
-            if ( $connection == $this->defaultConn()) continue;
+            if ($connection == $this->defaultConn()) {
+                continue;
+            }
+
             $data->put($connection['username'], $this->models->execute_kw(
                 $this->DB,
                 $connection['user_id'],
@@ -84,32 +104,33 @@ class OdooConnect
         $odooFilter = [];
         if (isset($filters['id'])) {
             $odooFilter[] = ['id', '>', $filters['id']];
-        } elseif (isset($filters['id_range'])){
+        } elseif (isset($filters['id_range'])) {
             $odooFilter[] = ['id', '>=', $filters['id_range'][0]];
             $odooFilter[] = ['id', '<=', $filters['id_range'][1]];
         }
 
         if (isset($filters['created'])) {
             $odooFilter[] = ['create_date', '>', $filters['created']];
-        } 
+        }
         if (isset($filters['updated'])) {
             $odooFilter[] = ['__last_update', '>', $filters['updated']];
-        } 
+        }
         if (isset($filters['write'])) {
             $odooFilter[] = ['write_date', '>', $filters['write']];
-        } 
+        }
         if (isset($filters['term'])) {
             foreach ($filters['term'] as $term) {
                 $odooFilter[] = [$term[0], '=', $term[1]];
             }
-        } 
+        }
 
         return [$odooFilter];
     }
 
-    public static function getAllActiveIds($model){
-        $odoo = new self;
-        $modelIds = $odoo->defaultExec($model,'search',[[['active','=',true]]],['limit'=>100000]);
+    public static function getAllActiveIds($model)
+    {
+        $odoo     = new self;
+        $modelIds = $odoo->defaultExec($model, 'search', [[['active', '=', true]]], ['limit' => 100000]);
         return $modelIds;
     }
 
