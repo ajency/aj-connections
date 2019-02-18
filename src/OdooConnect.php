@@ -123,7 +123,11 @@ class OdooConnect
                 $odooFilter[] = [$term[0], '=', $term[1]];
             }
         }
-
+        if (isset($filters['in'])) {
+            foreach ($filters['in'] as $in) {
+                $odooFilter[] = [$in[0], 'in', $in[1]];
+            }
+        }
         return [$odooFilter];
     }
 
