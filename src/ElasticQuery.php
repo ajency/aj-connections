@@ -536,4 +536,29 @@ class ElasticQuery
     {
         return json_encode($this->getParams()["body"], true);
     }
+    
+    public static function createTerms($field, $value)
+    {
+        return ["terms" => [$field => $value]];
+    }
+
+    public static function createMatchPhrase( string $field, string $value)
+    {
+        return ["match_phrase" => [ $field => $value ]];
+    }
+
+    public static function createAggTopHits(string $name, string $size, array $params = [])
+    {
+        return [$name => ["top_hits" => ["size" => $size, $params ]]];
+    }
+
+    public static function createAggCount(string $name,  string $field, string $method="value_count")
+    {
+        return [$name => [$method => ["field" => $field]]];
+    }
+
+    public static function createAggMethod(string $name, string $method, array $params )
+    {
+        return [$name => [$method => $params]];
+    }
 }
