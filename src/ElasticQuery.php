@@ -561,4 +561,9 @@ class ElasticQuery
     {
         return [$name => [$method => $params]];
     }
+    
+    public static function createMethod(string $method, array $params)
+    {
+       return [$method => $params];
+    }
 }
