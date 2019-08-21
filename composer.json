@@ -3,8 +3,7 @@
     "description": "Elasticsearch and Odoo wrapper",
     "require": {
         "elasticsearch/elasticsearch": "^6.0",
-        "darkaonline/ripcord": "^0.1.6",
-        "laravel/framework": "5.7.*"
+        "darkaonline/ripcord": "^0.1.6"
     },
     "autoload": {
         "psr-4": {
