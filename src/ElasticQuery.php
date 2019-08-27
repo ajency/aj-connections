@@ -256,7 +256,7 @@ class ElasticQuery
 
     /**
      * Elastic Search function
-     * Can be use for Search and Aggregations
+     * Can be used for Search and Aggregations
      *
      * @param array $params Search params
      * @return array Elasticsearch Response
@@ -264,6 +264,18 @@ class ElasticQuery
     public function search()
     {
         return $this->elastic_client->search($this->params);
+    }
+
+    /**
+     * Elastic Scroll function
+     * Can be used for Scroll
+     *
+     * @param array $params Scroll params
+     * @return array Elasticsearch Response
+     */
+    public function scroll()
+    {
+        return $this->elastic_client->scroll($this->params);
     }
 
     /**
