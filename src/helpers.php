@@ -34,7 +34,7 @@ function getElasticBooleanHelper($json_path)
 {
     try {
         $client   = new \GuzzleHttp\Client(['http_errors' => false]);
-        $response = $client->request('GET', config('app.list_url') . '/' . $json_path, []);
+        $response = $client->request('GET', config('filesystems.list_url') . '/' . $json_path, []);
         if ($response->getStatusCode() == 200) {
             return true;
         } else {
