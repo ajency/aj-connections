@@ -29,6 +29,8 @@ class ElasticQuery
         $this->elastic_client = ClientBuilder::create()
             ->setHosts($hosts)
             ->build();
+
+        $this->elastic_boolean = getElasticBooleanHelper('get_elastic_master.json');
     }
 
     public function reset()
@@ -66,7 +68,11 @@ class ElasticQuery
         if (!isset($this->params['body'])) {
             $this->setBody();
         }
-        $this->params['body']["query"] = $query;
+
+        if ($this->elastic_boolean) {
+            $this->params['body']["query"] = $query;
+        }
+
         return $this;
     }
 
@@ -196,7 +202,10 @@ class ElasticQuery
             $this->setQuery();
         }
 
-        $this->params["body"]["size"] = $size;
+        if ($this->elastic_boolean) {
+            $this->params["body"]["size"] = $size;
+        }
+
         return $this;
     }
 
@@ -206,7 +215,10 @@ class ElasticQuery
             $this->setQuery();
         }
 
-        $this->params["body"]["sort"] = $params;
+        if ($this->elastic_boolean) {
+            $this->params["body"]["sort"] = $params;
+        }
+
         return $this;
     }
 
@@ -239,7 +251,10 @@ class ElasticQuery
             $this->setQuery();
         }
 
-        $this->params["body"]["from"] = $from;
+        if ($this->elastic_boolean) {
+            $this->params["body"]["from"] = $from;
+        }
+
         return $this;
     }
 
@@ -284,7 +299,7 @@ class ElasticQuery
      * @param string $id Search params
      * @param $source can be a array of field names or a field name
      * Controls which field(s) will be fetched
-     * empty array returns all fields  
+     * empty array returns all fields
      * @return array Elasticsearch Response
      */
     public function get($id, $source = [])
@@ -370,7 +385,6 @@ class ElasticQuery
 
     public function createGetParams(string $id)
     {
-        // $this->params = [];
         $this->params["type"] = "_doc";
         $this->params["id"]   = $id;
         return $this;
@@ -444,12 +458,12 @@ class ElasticQuery
     public function alterAlias(string $alias, string $new_index)
     {
 
-        $this->params['body']['actions']  = collect($this->elastic_client->cat()->aliases(['name' => $alias]))
+        $this->params['body']['actions'] = collect($this->elastic_client->cat()->aliases(['name' => $alias]))
             ->pluck('index')
             ->map(function ($item, $key) use ($alias) {
                 return ['remove' => ['index' => $item, 'alias' => $alias]];
             })->toArray();
-        
+
         $this->params['body']['actions'][] = ['add' => ['index' => $new_index, 'alias' => $alias]];
         return $this->elastic_client->indices()->updateAliases($this->params);
     }
@@ -515,7 +529,7 @@ class ElasticQuery
 
     public static function createAggFilter(string $name, array $filter)
     {
-        return [$name => ["filter" => $filter ]];
+        return [$name => ["filter" => $filter]];
     }
 
     public static function addToAggregation(array $aggs, array $new_aggs)
@@ -548,34 +562,34 @@ class ElasticQuery
     {
         return json_encode($this->getParams()["body"], true);
     }
-    
+
     public static function createTerms($field, $value)
     {
         return ["terms" => [$field => $value]];
     }
 
-    public static function createMatchPhrase( string $field, string $value)
+    public static function createMatchPhrase(string $field, string $value)
     {
-        return ["match_phrase" => [ $field => $value ]];
+        return ["match_phrase" => [$field => $value]];
     }
 
     public static function createAggTopHits(string $name, string $size, array $params = [])
     {
-        return [$name => ["top_hits" => ["size" => $size, $params ]]];
+        return [$name => ["top_hits" => ["size" => $size, $params]]];
     }
 
-    public static function createAggCount(string $name,  string $field, string $method="value_count")
+    public static function createAggCount(string $name, string $field, string $method = "value_count")
     {
         return [$name => [$method => ["field" => $field]]];
     }
 
-    public static function createAggMethod(string $name, string $method, array $params )
+    public static function createAggMethod(string $name, string $method, array $params)
     {
         return [$name => [$method => $params]];
     }
-    
+
     public static function createMethod(string $method, array $params)
     {
-       return [$method => $params];
+        return [$method => $params];
     }
 }

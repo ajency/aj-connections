@@ -6,6 +6,9 @@
         "darkaonline/ripcord": "^0.1.6"
     },
     "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
         "psr-4": {
             "Ajency\\Connections\\": "src/"
         }
