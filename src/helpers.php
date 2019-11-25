@@ -30,6 +30,11 @@ function getListFiltersHelper($must, $must_not, $lang)
     return [$must, $must_not];
 }
 
+function getInvFetchHelper()
+{
+    return getElasticBooleanHelper('get_inv_fetch.json');
+}
+
 function getElasticBooleanHelper($json_path)
 {
     try {
