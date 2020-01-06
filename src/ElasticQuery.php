@@ -25,7 +25,6 @@ class ElasticQuery
 
         $this->prefix    = is_null($prefix) ? config('elastic.prefix') : $prefix;
         $this->alternate = $alternate;
-        \Log::debug(json_encode($hosts, true));
         $this->elastic_client = ClientBuilder::create()
             ->setHosts($hosts)
             ->build();
@@ -341,19 +340,7 @@ class ElasticQuery
      */
     public function bulk()
     {
-        // if ($this->alternate) {
-        //     $indexes = Defaults::getElasticAlternateIndexes($this->index);
-        //     foreach ($indexes as $index) {
-        //         $this->params["index"] = $index;
-        //         \Log::debug($this->params);
-        //         $responses = $this->elastic_client->bulk($this->params);
-        //         \Log::debug($responses);
-        //     }
-        // } else {
-        \Log::debug($this->params);
         $responses = $this->elastic_client->bulk($this->params);
-        \Log::debug($responses);
-        // }
         return $responses;
     }
 
